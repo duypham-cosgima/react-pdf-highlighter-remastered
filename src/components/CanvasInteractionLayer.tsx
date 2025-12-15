@@ -36,6 +36,7 @@ export interface CanvasInteractionLayerProps {
 export const CanvasInteractionLayer = ({
   pageNumber,
   viewer,
+  enableFreeformSelection,
   devicePixelRatio = window.devicePixelRatio || 1,
 }: CanvasInteractionLayerProps) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -73,6 +74,7 @@ export const CanvasInteractionLayer = ({
     };
 
     const handleMouseDown = (event: PointerEvent) => {
+      if (!enableFreeformSelection(event)) return;
       drawing.current = { points: [] };
       const point = getCanvasCoords(event);
       drawing.current.points.push(point);
@@ -81,7 +83,7 @@ export const CanvasInteractionLayer = ({
     };
 
     const handleMouseMove = (event: PointerEvent) => {
-      if (!drawing.current) return;
+      if (!drawing.current || !enableFreeformSelection(event)) return;
       const highlightStyle = defaultFreeformPreviewStyle;
       const point = getCanvasCoords(event);
       drawing.current.points.push(point);
@@ -92,7 +94,7 @@ export const CanvasInteractionLayer = ({
     };
 
     const handleMouseUp = (event: PointerEvent) => {
-      if (!drawing.current) return;
+      if (!drawing.current || !enableFreeformSelection(event)) return;
       const points = drawing.current.points;
       const firstPoint = points[0];
       const lastPoint = points[points.length - 1];
@@ -101,7 +103,8 @@ export const CanvasInteractionLayer = ({
         ctx.lineTo(firstPoint.x, firstPoint.y);
         ctx.stroke();
       }
-      ctx.closePath();
+      ctx.fillStyle = "rgba(251, 247, 25, 0.25)";
+      ctx.fill();
       drawing.current = null;
     }
 
