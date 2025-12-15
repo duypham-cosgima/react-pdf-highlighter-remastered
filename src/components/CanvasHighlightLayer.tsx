@@ -1,5 +1,11 @@
 import React from "react";
-import { Highlight, GhostHighlight, LTWH } from "../types";
+import {
+  Highlight,
+  GhostHighlight,
+  LTWH,
+  StyleMap,
+  HighlightStyle,
+} from "../types";
 import { PDFViewer } from "pdfjs-dist/types/web/pdf_viewer";
 import { useEffect, useRef } from "react";
 import { scaledToViewport } from "../lib/coordinates";
@@ -23,7 +29,7 @@ export interface CanvasHighlightLayerProps {
   pageNumber: number;
 
   /**
-   * The PDFViewer instance containing the HighlightLayer
+   * The PDFViewer instance containing the HighlightLayer.
    */
   viewer: PDFViewer;
 
@@ -32,6 +38,11 @@ export interface CanvasHighlightLayerProps {
    * Typically, the devicePixelRatio property of the window object.
    */
   devicePixelRatio?: number;
+
+  /**
+   * The style map to use when drawing highlights.
+   */
+  styleMap?: StyleMap;
 }
 
 export const CanvasHighlightLayer = ({
@@ -39,6 +50,7 @@ export const CanvasHighlightLayer = ({
   pageNumber,
   viewer,
   devicePixelRatio = window.devicePixelRatio || 1,
+  styleMap,
 }: CanvasHighlightLayerProps) => {
   const currentHighlights = highlightsByPage[pageNumber] || [];
 
@@ -71,16 +83,21 @@ export const CanvasHighlightLayer = ({
     ctx.clearRect(0, 0, viewport.width, viewport.height);
 
     for (const highlight of currentHighlights) {
+      const highlightStyle =
+        (styleMap && typeof highlight.style === "string")
+          ? styleMap[highlight.style]
+          : (highlight.style as HighlightStyle ?? defaultHighlightStyle);
+
       if (highlight.type === "area") {
         const position: LTWH = scaledToViewport(
           highlight.position.boundingRect,
           viewport,
         );
-        drawHighlightRectangle(ctx, position, defaultHighlightStyle);
+        drawHighlightRectangle(ctx, position, highlightStyle);
       } else if (highlight.type === "text") {
         for (const rect of highlight.position.rects) {
           const position: LTWH = scaledToViewport(rect, viewport);
-          drawHighlightRectangle(ctx, position, defaultHighlightStyle);
+          drawHighlightRectangle(ctx, position, highlightStyle);
         }
       }
     }

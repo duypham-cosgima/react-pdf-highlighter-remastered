@@ -134,16 +134,16 @@ export interface Highlight {
    */
   type?: HighlightType;
   /**
+   * Highlight style for a single highlight. Used to specify style to be used in
+   * style map, or to override the style for a specific highlight.
+   */
+  style?: keyof StyleMap | HighlightStyle;
+  /**
    * @deprecated If you want your highlight to store content after being a
    * GhostHighlight, you should create your own interface extended off this. If
    * you are currently using this property to determine what kind of highlight
    * to render, please use {@link type}.
    */
-  /**
-   * Highlight style for a single highlight. Used to specify style to be used in
-   * style map, or to override the style for a specific highlight.
-   */
-  style?: keyof StyleMap | HighlightStyle;
   content?: Content;
   position: ScaledPosition;
 }

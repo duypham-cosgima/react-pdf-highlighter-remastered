@@ -35,6 +35,7 @@ import {
   HighlightBindings,
   PdfScaleValue,
   PdfSelection,
+  StyleMap,
   Tip,
   ViewportPosition,
 } from "../types";
@@ -171,6 +172,11 @@ export interface PdfHighlighterProps {
   utilsRef(pdfHighlighterUtils: PdfHighlighterUtils): void;
 
   /**
+   * The style map to use when drawing highlights on canvas.
+   */
+  styleMap?: StyleMap;
+
+  /**
    * Style properties for the PdfHighlighter (scrollbar, background, etc.), NOT
    * the PDF.js viewer it encloses. If you want to edit the latter, use the
    * other style props like `textSelectionColor` or overwrite pdf_viewer.css
@@ -202,6 +208,7 @@ export const PdfHighlighter = ({
   children,
   textSelectionColor = DEFAULT_TEXT_SELECTION_COLOR,
   utilsRef,
+  styleMap,
   style,
 }: PdfHighlighterProps) => {
   // State
@@ -430,6 +437,12 @@ export const PdfHighlighter = ({
     highlightBindings.reactRoot.render(
       <PdfHighlighterContext.Provider value={pdfHighlighterUtils}>
         <>
+          <CanvasHighlightLayer
+            highlightsByPage={groupedHighlights}
+            pageNumber={pageNumber}
+            viewer={viewerRef.current}
+            styleMap={styleMap}
+          />
           <HighlightLayer
             highlightsByPage={groupedHighlights}
             pageNumber={pageNumber}
@@ -437,11 +450,6 @@ export const PdfHighlighter = ({
             viewer={viewerRef.current}
             highlightBindings={highlightBindings}
             children={children}
-          />
-          <CanvasHighlightLayer
-            highlightsByPage={groupedHighlights}
-            pageNumber={pageNumber}
-            viewer={viewerRef.current}
           />
         </>
       </PdfHighlighterContext.Provider>,
