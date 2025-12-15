@@ -1,7 +1,7 @@
 {
   "name": "react-pdf-highlighter-remastered",
   "type": "module",
-  "version": "9.0.0",
+  "version": "8.2.0",
   "description": "React components for PDF highlighting. A fork of react-pdf-highlighter-extended that adds cavas-based highlights",
   "author": "Duy Pham <duy.pham@cosigma.io>",
   "license": "MIT",
@@ -42,20 +42,13 @@
     "clean": "rm -rf dist public node_modules package-lock.json"
   },
   "peerDependencies": {
+    "pdfjs-dist": "^5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "dependencies": {
     "lodash.debounce": "^4.0.8",
-    "pdfjs-dist": "^4.4.168",
-    "react-rnd": "^10.4.11"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/DanielArnould/react-pdf-highlighter.git"
-  },
-  "bugs": {
-    "url": "https://github.com/DanielArnould/react-pdf-highlighter-extended/issues"
+    "react-rnd": "^10.4.13"
   },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.9",
