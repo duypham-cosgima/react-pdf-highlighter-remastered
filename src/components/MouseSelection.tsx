@@ -142,6 +142,8 @@ export const MouseSelection = ({
     const container = asElement(rootRef.current.parentElement);
 
     const handleMouseUp = (event: MouseEvent) => {
+      setLocked(true);
+
       if (!start || !end || !startTargetRef.current) return;
 
       const boundingRect = getBoundingRect(start, end);
@@ -154,8 +156,6 @@ export const MouseSelection = ({
         reset();
         return;
       }
-
-      setLocked(true);
 
       const page = getPageFromElement(startTargetRef.current);
       if (!page) return;
