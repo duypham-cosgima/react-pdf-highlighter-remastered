@@ -40,7 +40,7 @@
     "build:example": "(cd ./example && tsc && vite build && mkdir \"../public/\" && cp -r example-app ../public/)",
     "build:docs": "npx typedoc",
     "clean": "rm -rf dist public node_modules package-lock.json",
-    "prepare": "tsc"
+    "prepare": "cp -r ./src/style ./dist/esm && tsc"
   },
   "peerDependencies": {
     "pdfjs-dist": "^5",
