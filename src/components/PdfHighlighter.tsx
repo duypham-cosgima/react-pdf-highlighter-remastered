@@ -50,7 +50,6 @@ import type {
 } from "pdfjs-dist/web/pdf_viewer.mjs";
 import { CanvasHighlightLayer } from "./CanvasHighlightLayer";
 import { ghostHighlightStyle } from "../lib/canvas";
-import { CanvasInteractionLayer } from "./CanvasInteractionLayer";
 
 let EventBus: typeof TEventBus,
   PDFLinkService: typeof TPDFLinkService,
@@ -451,11 +450,6 @@ export const PdfHighlighter = ({
             viewer={viewerRef.current}
             highlightBindings={highlightBindings}
             children={children}
-          />
-          <CanvasInteractionLayer
-            pageNumber={pageNumber}
-            viewer={viewerRef.current}
-            enableFreeformSelection={(e) => true}
           />
         </>
       </PdfHighlighterContext.Provider>,
