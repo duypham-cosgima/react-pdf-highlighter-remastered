@@ -1,9 +1,13 @@
 .AreaHighlight__part {
   cursor: pointer;
   position: absolute;
-  background: transparent;
+  background: rgba(255, 255, 255, 0);
   transition: background 0.3s;
   transition: opacity 0.3s;
+}
+
+.AreaHighlight__part:hover {
+  background: rgba(255, 255, 255, 0.4);
 }
 
 .AreaHighlight--scrolledTo .AreaHighlight__part {

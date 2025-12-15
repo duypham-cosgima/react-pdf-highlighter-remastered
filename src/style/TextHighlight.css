@@ -14,6 +14,10 @@
   transition: opacity 0.3s;
 }
 
+.TextHighlight__parts:hover .TextHighlight__part {
+  background: rgba(255, 255, 255, 0.4);
+}
+
 .TextHighlight--scrolledTo .TextHighlight__part {
   background: #ff4141;
 }
