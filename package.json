@@ -1,9 +1,9 @@
 {
-  "name": "react-pdf-highlighter-extended",
+  "name": "react-pdf-highlighter-remastered",
   "type": "module",
-  "version": "8.1.0",
-  "description": "Set of modern React components for PDF highlighting",
-  "author": "Daniel Arnould <daniel.s.arnould@gmail.com>",
+  "version": "9.0.0",
+  "description": "React components for PDF highlighting. A fork of react-pdf-highlighter-extended that adds cavas-based highlights",
+  "author": "Duy Pham <duy.pham@cosigma.io>",
   "license": "MIT",
   "contributors": [
     {
@@ -13,6 +13,10 @@
     {
       "name": "Artem Tyurin",
       "email": "artem.tyurin@gmail.com"
+    },
+    {
+      "name": "Duy Pham",
+      "email": "duy.pham@cosigma.io"
     }
   ],
   "keywords": [
