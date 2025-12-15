@@ -6,6 +6,7 @@ import {
   usePdfHighlighterContext,
 } from "./react-pdf-highlighter-extended";
 import "./style/ExpandableTip.css";
+import { ghostHighlightStyle } from "../../src/lib/canvas";
 
 interface ExpandableTipProps {
   addHighlight: (highlight: GhostHighlight, comment: string) => void;
@@ -41,6 +42,7 @@ const ExpandableTip = ({ addHighlight }: ExpandableTipProps) => {
           onSubmit={(input) => {
             addHighlight(
               {
+                style: ghostHighlightStyle,
                 content: selectionRef.current!.content,
                 type: selectionRef.current!.type,
                 position: selectionRef.current!.position,
