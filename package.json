@@ -39,7 +39,8 @@
     "build:copy-styles": "cp -r ./src/style ./dist/esm",
     "build:example": "(cd ./example && tsc && vite build && mkdir \"../public/\" && cp -r example-app ../public/)",
     "build:docs": "npx typedoc",
-    "clean": "rm -rf dist public node_modules package-lock.json"
+    "clean": "rm -rf dist public node_modules package-lock.json",
+    "prepare": "tsc"
   },
   "peerDependencies": {
     "pdfjs-dist": "^5",
