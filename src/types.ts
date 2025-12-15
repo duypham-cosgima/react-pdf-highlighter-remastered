@@ -2,6 +2,17 @@ import { ReactNode } from "react";
 import { Root } from "react-dom/client";
 
 /**
+ * CSS color values.
+ *
+ * @category Type
+ */
+type RGB = `rgb(${number}, ${number}, ${number})`;
+type RGBA = `rgba(${number}, ${number}, ${number}, ${number})`;
+type HEX = `#${string}`;
+
+type HighlightColor = RGB | RGBA | HEX;
+
+/**
  * A rectangle as measured by the viewport.
  *
  * @category Type
@@ -90,6 +101,27 @@ export type Content = {
 export type HighlightType = "text" | "area";
 
 /**
+ * The highlight's style. Determines how it looks when rendered on canvas.
+ *
+ * @category Type
+ */
+export type HighlightStyle = {
+  fillColor: HighlightColor;
+  strokeColor?: HighlightColor;
+  strokeWidth?: number;
+  cornerRadius?: number;
+};
+
+/**
+ * Style map that contains styles for different highlight variants. If the highlight's
+ * style is a string, it will be used as a key to look for the corresponding style
+ * in this map.
+ *
+ * @category Type
+ */
+export type StyleMap = Record<string, HighlightStyle>;
+
+/**
  * This represents a selected (text/mouse) area that has been turned into a
  * highlight. If you are storing highlights, they should be stored as this type.
  *
@@ -107,7 +139,12 @@ export interface Highlight {
    * you are currently using this property to determine what kind of highlight
    * to render, please use {@link type}.
    */
-  content?: Content
+  /**
+   * Highlight style for a single highlight. Used to specify style to be used in
+   * style map, or to override the style for a specific highlight.
+   */
+  style?: keyof StyleMap | HighlightStyle;
+  content?: Content;
   position: ScaledPosition;
 }
 
@@ -139,7 +176,7 @@ export type ViewportHighlight<T extends Highlight = Highlight> = Omit<
  *
  * @category Type
  */
-export type PdfSelection = GhostHighlight & {
+export type PdfSelection = Omit<GhostHighlight, "style"> & {
   /** Convert the current selection into a temporary highlight */
   makeGhostHighlight(): GhostHighlight;
 };

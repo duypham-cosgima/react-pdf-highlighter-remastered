@@ -1,4 +1,4 @@
-import React, { CSSProperties, MouseEvent, useEffect, useState } from "react";
+import React, { CSSProperties, MouseEvent } from "react";
 
 import "../style/TextHighlight.css";
 

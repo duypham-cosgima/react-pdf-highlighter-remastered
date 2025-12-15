@@ -47,6 +47,8 @@ import type {
   PDFLinkService as TPDFLinkService,
   PDFViewer as TPDFViewer,
 } from "pdfjs-dist/web/pdf_viewer.mjs";
+import { CanvasHighlightLayer } from "./CanvasHighlightLayer";
+import { ghostHighlightStyle } from "../lib/canvas";
 
 let EventBus: typeof TEventBus,
   PDFLinkService: typeof TPDFLinkService,
@@ -67,13 +69,13 @@ const DEFAULT_TEXT_SELECTION_COLOR = "rgba(153,193,218,255)";
 const findOrCreateHighlightLayer = (textLayer: HTMLElement) => {
   return findOrCreateContainerLayer(
     textLayer,
-    "PdfHighlighter__highlight-layer"
+    "PdfHighlighter__highlight-layer",
   );
 };
 
 const disableTextSelection = (
   viewer: InstanceType<typeof PDFViewer>,
-  flag: boolean
+  flag: boolean,
 ) => {
   viewer.viewer?.classList.toggle("PdfHighlighter--disable-selection", flag);
 };
@@ -206,7 +208,7 @@ export const PdfHighlighter = ({
   const [tip, setTip] = useState<Tip | null>(null);
   const [isViewerReady, setIsViewerReady] = useState(false);
   const [ghostHighlight, setGhostHighlight] = useState<GhostHighlight | null>(
-    null
+    null,
   );
   const [selection, setSelection] = useState<PdfSelection | null>(null);
   const [isSelectionInProgress, setIsSelectionInProgress] = useState(false);
@@ -215,7 +217,7 @@ export const PdfHighlighter = ({
   // Refs
   const containerNodeRef = useRef<HTMLDivElement | null>(null);
   const highlightBindingsRef = useRef<{ [page: number]: HighlightBindings }>(
-    {}
+    {},
   );
   const scrolledToHighlightIdRef = useRef<string | null>(null);
   const updateTipPositionRef = useRef(() => {});
@@ -225,7 +227,7 @@ export const PdfHighlighter = ({
     new PDFLinkService({
       eventBus: eventBusRef.current,
       externalLinkTarget: 2,
-    })
+    }),
   );
   const resizeObserverRef = useRef<ResizeObserver | null>(null);
   const viewerRef = useRef<InstanceType<typeof PDFViewer> | null>(null);
@@ -327,7 +329,7 @@ export const PdfHighlighter = ({
 
     const scaledPosition = viewportPositionToScaled(
       viewportPosition,
-      viewerRef.current
+      viewerRef.current,
     );
 
     const content: Content = {
@@ -342,6 +344,7 @@ export const PdfHighlighter = ({
         const newGhostHighlight: GhostHighlight = {
           content: content,
           type: "text",
+          style: ghostHighlightStyle,
           position: scaledPosition,
         };
 
@@ -415,24 +418,33 @@ export const PdfHighlighter = ({
   // Render Highlight layers
   const renderHighlightLayer = (
     highlightBindings: HighlightBindings,
-    pageNumber: number
+    pageNumber: number,
   ) => {
     if (!viewerRef.current) return;
 
+    const groupedHighlights = groupHighlightsByPage([
+      ...highlights,
+      ghostHighlight,
+    ]);
+
     highlightBindings.reactRoot.render(
       <PdfHighlighterContext.Provider value={pdfHighlighterUtils}>
-        <HighlightLayer
-          highlightsByPage={groupHighlightsByPage([
-            ...highlights,
-            ghostHighlight,
-          ])}
-          pageNumber={pageNumber}
-          scrolledToHighlightId={scrolledToHighlightIdRef.current}
-          viewer={viewerRef.current}
-          highlightBindings={highlightBindings}
-          children={children}
-        />
-      </PdfHighlighterContext.Provider>
+        <>
+          <HighlightLayer
+            highlightsByPage={groupedHighlights}
+            pageNumber={pageNumber}
+            scrolledToHighlightId={scrolledToHighlightIdRef.current}
+            viewer={viewerRef.current}
+            highlightBindings={highlightBindings}
+            children={children}
+          />
+          <CanvasHighlightLayer
+            highlightsByPage={groupedHighlights}
+            pageNumber={pageNumber}
+            viewer={viewerRef.current}
+          />
+        </>
+      </PdfHighlighterContext.Provider>,
     );
   };
 
@@ -463,7 +475,7 @@ export const PdfHighlighter = ({
 
           renderHighlightLayer(
             highlightBindingsRef.current[pageNumber],
-            pageNumber
+            pageNumber,
           );
         }
       }
@@ -487,7 +499,7 @@ export const PdfHighlighter = ({
     // Toggle text selection
     viewerRef.current?.viewer?.classList.toggle(
       "PdfHighlighter--disable-selection",
-      newState
+      newState,
     );
   };
 
@@ -516,7 +528,7 @@ export const PdfHighlighter = ({
     viewerRef.current!.container.removeEventListener("scroll", handleScroll);
 
     const pageViewport = viewerRef.current!.getPageView(
-      pageNumber - 1
+      pageNumber - 1,
     ).viewport;
 
     viewerRef.current!.scrollPageIntoView({
@@ -527,7 +539,7 @@ export const PdfHighlighter = ({
         ...pageViewport.convertToPdfPoint(
           0, // Default x coord
           scaledToViewport(boundingRect, pageViewport, usePdfCoordinates).top -
-            SCROLL_MARGIN
+            SCROLL_MARGIN,
         ),
         0, // Default z coord
       ],
@@ -600,7 +612,7 @@ export const PdfHighlighter = ({
               viewportPosition,
               scaledPosition,
               image,
-              resetSelection
+              resetSelection,
             ) => {
               const newSelection: PdfSelection = {
                 content: { image },
@@ -610,6 +622,7 @@ export const PdfHighlighter = ({
                   const newGhostHighlight: GhostHighlight = {
                     position: scaledPosition,
                     type: "area",
+                    style: ghostHighlightStyle,
                     content: { image },
                   };
 
