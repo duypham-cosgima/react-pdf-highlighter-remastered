@@ -1,13 +1,25 @@
 import { HighlightStyle, LTWH } from "../types";
 
 /**
- * Style for ghost highlights.
+ * Style for ghost highlights on canvas.
  *
  * @category Canvas Utilities
  * @internal
  */
 export const ghostHighlightStyle: HighlightStyle = {
-  fillColor: "rgba(251, 247, 25, 0.25)"
+  fillColor: "rgba(251, 247, 25, 0.25)",
+};
+
+/**
+ * Default style for previews of freeform highlights when drawing.
+ *
+ * @category Canvas Utilities
+ * @internal
+ */
+export const defaultFreeformPreviewStyle: HighlightStyle = {
+  fillColor: "rgba(0, 0, 0, 0)",
+  strokeColor: "rgba(153, 193, 218, 0.25)",
+  strokeWidth: 2,
 };
 
 /**
