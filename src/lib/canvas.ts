@@ -51,7 +51,11 @@ export const drawHighlightRectangle = (
   const strokeWidth = style.strokeWidth ?? 0;
   const cornerRadius = style.cornerRadius ?? 0;
 
+  console.log(style);
+
   ctx.fillStyle = style.fillColor;
+
+  ctx.beginPath();
 
   if (cornerRadius > 0) {
     ctx.roundRect(left, top, width, height, cornerRadius);
@@ -59,9 +63,12 @@ export const drawHighlightRectangle = (
     ctx.rect(left, top, width, height);
   }
   ctx.fill();
+
   if (strokeWidth > 0) {
     ctx.strokeStyle = style.strokeColor ?? "transparent";
     ctx.lineWidth = strokeWidth;
     ctx.stroke();
   }
+
+  ctx.closePath();
 };

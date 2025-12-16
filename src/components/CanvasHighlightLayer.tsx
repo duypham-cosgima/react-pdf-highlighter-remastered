@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Highlight,
   GhostHighlight,
@@ -52,7 +52,9 @@ export const CanvasHighlightLayer = ({
   devicePixelRatio = window.devicePixelRatio || 1,
   styleMap,
 }: CanvasHighlightLayerProps) => {
-  const currentHighlights = highlightsByPage[pageNumber] || [];
+  const currentHighlights = useMemo(() => highlightsByPage[pageNumber] || [], [
+    highlightsByPage,
+  ]);
 
   const viewport = viewer.getPageView(pageNumber - 1).viewport;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -78,15 +80,15 @@ export const CanvasHighlightLayer = ({
     const canvas = canvasRef.current ?? null;
     const ctx = canvas?.getContext("2d");
 
-    if (!ctx) return;
+    if (!canvas || !ctx) return;
 
-    ctx.clearRect(0, 0, viewport.width, viewport.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     for (const highlight of currentHighlights) {
       const highlightStyle =
-        (styleMap && typeof highlight.style === "string")
+        styleMap && typeof highlight.style === "string"
           ? styleMap[highlight.style]
-          : (highlight.style as HighlightStyle ?? defaultHighlightStyle);
+          : ((highlight.style as HighlightStyle) ?? defaultHighlightStyle);
 
       if (highlight.type === "area") {
         const position: LTWH = scaledToViewport(
@@ -101,7 +103,7 @@ export const CanvasHighlightLayer = ({
         }
       }
     }
-  }, [currentHighlights, viewport, pageNumber]);
+  }, [JSON.stringify(currentHighlights), viewport, pageNumber]);
 
   return (
     <canvas

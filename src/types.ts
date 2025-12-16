@@ -154,7 +154,8 @@ export interface Highlight {
  *
  * @category Type
  */
-export interface GhostHighlight extends Required<Omit<Highlight, "id">> {
+export interface GhostHighlight extends Required<Omit<Highlight, "id" | "style">> {
+  style?: keyof StyleMap | HighlightStyle;
   content: Content;
 }
 
