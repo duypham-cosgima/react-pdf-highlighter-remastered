@@ -52,14 +52,16 @@ export const drawHighlightRectangle = (
   const cornerRadius = style.cornerRadius ?? 0;
 
   ctx.fillStyle = style.fillColor;
-  if (cornerRadius) {
-    ctx.fillRect(left, top, width, height);
-  } else {
+
+  if (cornerRadius > 0) {
     ctx.roundRect(left, top, width, height, cornerRadius);
+  } else {
+    ctx.rect(left, top, width, height);
   }
-  ctx.strokeStyle = style.strokeColor ?? "transparent";
-  ctx.lineWidth = strokeWidth;
-  if (strokeWidth) {
-    ctx.strokeRect(left, top, width, height);
+  ctx.fill();
+  if (strokeWidth > 0) {
+    ctx.strokeStyle = style.strokeColor ?? "transparent";
+    ctx.lineWidth = strokeWidth;
+    ctx.stroke();
   }
 };
